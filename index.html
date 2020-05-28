@@ -56,14 +56,9 @@
                   <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
                 </li> -->
               </ul>
-              <form class="form-inline my-2 my-lg-0">
-                <input class="form-control mr-sm-2" 
-                        type="search" 
-                        placeholder="Search" 
-                        aria-label="Search">
-                <button class="btn btn-outline-success my-2 my-sm-0" 
-                        type="submit">Search</button>
-              </form>
+              <div class="navbar-form navbar-right">
+                <input id="searchbox" type="text" class="form-control" placeholder="Search...">
+              </div>
             </div>
         </nav><br>
                 
@@ -118,7 +113,7 @@
            author: "John Smith", 
            },
          {
-           src:"http://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Wwii_woman_worker-edit.jpg/300px-Wwii_woman_worker-edit.jpg",
+           src:"https://upload.wikimedia.org/wikipedia/commons/5/53/War_Office_Second_World_War_Official_Collection_H28513.jpg",
            title:"wwii woman worker",
            author:"Another author", 
         },
@@ -139,9 +134,60 @@
     var html    = template(data);
     // put the rendered template into the DOM
     $('#content').html(html);
+           
+    $('#searchbox').keypress(function (e) {
 
+        // check if the key that was pressed
+        // is the return key (it has id 13)
+        // and only do the search if it is
+        if (e.which == 13) {
 
+            // get the search text which is the 
+            // contents of the search box
+            var search_text = $('#searchbox').val();
+
+            // print the search box 
+            // (this is an example of using
+            // console.log for debugging)
+            console.log(search_text)
+
+            // create a new array of data with only
+            // the data that contains the search string
+            var filteredData = {
+
+                // use the filter function which returns
+                // a new array that contains only the 
+                // elements of data.images for which 
+                // the function returns true
+                images: data.images.filter(function(d){
+            
+                    // return true if the title contains 
+                    // the search text
+                    if (d.title.search(search_text) > -1){
+                        return true;
+                    }
+                
+                    // return true if the author contains 
+                    // the search text
+                    if (d.author.search(search_text) > -1){
+                        return true;
+                    }
+
+                    // if we reach here it means we haven't 
+                    // found a match so return false
+                    return false;
+                })
+            };
+  
+            // pass the newly filtered data into
+            // the template to generate new html
+            var html    = template(filteredData);
+            $('#content').html(html);
+
+        }
+    });
   </script>
             
     </body>
+
 </html>
